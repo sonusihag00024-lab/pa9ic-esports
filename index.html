@@ -152,16 +152,15 @@
     const db = getDatabase(app);
     const msgRef = ref(db, "announcement");
 
-    // 🟢 Show announcements in real time
+    // 🟢 Show announcements live
     onValue(msgRef, (snapshot) => {
       const msg = snapshot.val();
       document.getElementById("announcement-text").textContent = msg || "No announcements yet.";
     });
 
-    // 🧑‍💻 Developer-only access
-    const developer = "sonusihag00024@gmail.com";
-    const myEmail = prompt("Enter developer email (optional):");
-    if (myEmail === developer) {
+    // 🧑‍💻 Developer button visible only when ?dev=on in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('dev') === 'on') {
       document.getElementById("dev-btn").style.display = "block";
     }
 
