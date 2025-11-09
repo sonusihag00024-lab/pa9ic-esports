@@ -69,7 +69,6 @@
       transform: scale(1.05);
     }
 
-    /* Custom colors for different platforms */
     .discord { border-color: #5865f2; box-shadow: 0 0 10px #5865f2, 0 0 40px #5865f2 inset; }
     .discord:hover { background: #5865f2; }
 
@@ -99,5 +98,81 @@
       <img src="https://cdn-icons-png.flaticon.com/512/25/25473.png" alt="Donate" /> Donate ₹
     </a>
   </div>
+
+  <!-- 🔔 Announcement Box -->
+  <div id="announce-box" style="
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    border-top: 2px solid #00f0ff;
+    text-align: center;
+    padding: 10px;
+    font-size: 1.1em;
+    color: #00f0ff;
+    font-weight: bold;
+    backdrop-filter: blur(8px);
+  ">
+    <span id="announcement-text">No announcements yet.</span>
+  </div>
+
+  <!-- 🧠 Developer Control -->
+  <button id="dev-btn" onclick="addAnnouncement()" style="
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    background: #00f0ff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5em;
+    color: black;
+    box-shadow: 0 0 20px #00f0ff;
+    cursor: pointer;
+    display: none;
+  ">+</button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB5QPMRPPRzQWDoxMXM4Nn4RFT0kgus5tg",
+      authDomain: "pa9ic-esports.firebaseapp.com",
+      databaseURL: "https://pa9ic-esports-default-rtdb.firebaseio.com",
+      projectId: "pa9ic-esports",
+      storageBucket: "pa9ic-esports.firebasestorage.app",
+      messagingSenderId: "18516534329",
+      appId: "1:18516534329:web:35be2c9108d8ad20a199e8",
+      measurementId: "G-R9776F0DVV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const msgRef = ref(db, "announcement");
+
+    // 🟢 Show announcements in real time
+    onValue(msgRef, (snapshot) => {
+      const msg = snapshot.val();
+      document.getElementById("announcement-text").textContent = msg || "No announcements yet.";
+    });
+
+    // 🧑‍💻 Developer-only access
+    const developer = "sonusihag00024@gmail.com";
+    const myEmail = prompt("Enter developer email (optional):");
+    if (myEmail === developer) {
+      document.getElementById("dev-btn").style.display = "block";
+    }
+
+    // ✏️ Add new announcement
+    window.addAnnouncement = function() {
+      const msg = prompt("Type new announcement:");
+      if (msg) {
+        set(msgRef, msg);
+        alert("Announcement updated!");
+      }
+    }
+  </script>
 </body>
 </html>
